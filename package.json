@@ -2,6 +2,7 @@
   "name": "monaco-worker-manager",
   "version": "1.0.0",
   "description": "Easily deal with monaco workers",
+  "type": "module",
   "scripts": {
     "prepack": "tsc --noEmit false"
   },
@@ -27,6 +28,10 @@
     "worker.js",
     "worker.d.ts"
   ],
+  "exports": {
+    ".": "./index.js",
+    "./worker": "./worker.js"
+  },
   "peerDependencies": {
     "monaco-editor": ">=0.30.0"
   },

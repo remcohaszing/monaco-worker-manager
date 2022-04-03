@@ -24,5 +24,7 @@ export type WebWorkerInitializeFunction<T, C> = (
  * @param fn - The function that creates the web worker.
  */
 export function initialize<T, C>(fn: WebWorkerInitializeFunction<T, C>): void {
-  initializeWorker<C>((ctx, createData) => Object.create(fn(ctx, createData)));
+  self.onmessage = () => {
+    initializeWorker<C>((ctx, createData) => Object.create(fn(ctx, createData)));
+  };
 }

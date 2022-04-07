@@ -50,7 +50,7 @@ export interface WorkerManagerOptions<C> {
   stopWhenIdleFor?: number;
 }
 
-export interface WorkerManager<T, C> extends IDisposable {
+export interface WorkerManager<T, C = unknown> extends IDisposable {
   /**
    * A function for getting the worker client proxy with synchronized resources.
    *

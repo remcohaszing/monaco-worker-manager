@@ -71,10 +71,12 @@ export interface WorkerManager<T, C> extends IDisposable {
  * A worker manager is an object which deals with Monaco based web workers, such as cleanups and
  * idle timeouts.
  *
+ * @param monaco - The Monaco editor module.
  * @param options - The options of the worker manager.
  * @returns The worker manager.
  */
 export function createWorkerManager<T, C = unknown>(
+  monaco: Pick<typeof import('monaco-editor'), 'editor'>,
   options: WorkerManagerOptions<C>,
 ): WorkerManager<T, C> {
   let { createData, interval = 30_000, label, moduleId, stopWhenIdleFor = 120_000 } = options;
@@ -116,7 +118,11 @@ export function createWorkerManager<T, C = unknown>(
       lastUsedTime = Date.now();
 
       if (!client) {
-        worker = editor.createWebWorker<PromisifiedWorker<T>>({ createData, label, moduleId });
+        worker = monaco.editor.createWebWorker<PromisifiedWorker<T>>({
+          createData,
+          label,
+          moduleId,
+        });
         client = worker.getProxy();
       }
 

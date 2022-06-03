@@ -81,7 +81,6 @@ export function createWorkerManager<T, C = unknown>(
 ): WorkerManager<T, C> {
   let { createData, interval = 30_000, label, moduleId, stopWhenIdleFor = 120_000 } = options;
   let worker: editor.MonacoWebWorker<PromisifiedWorker<T>> | undefined;
-  let client: Promise<PromisifiedWorker<T>> | undefined;
   let lastUsedTime = 0;
   let disposed = false;
 
@@ -90,7 +89,6 @@ export function createWorkerManager<T, C = unknown>(
       worker.dispose();
       worker = undefined;
     }
-    client = undefined;
   };
 
   const intervalId = setInterval(() => {
@@ -111,24 +109,21 @@ export function createWorkerManager<T, C = unknown>(
       stopWorker();
     },
 
-    async getWorker(...resources) {
+    getWorker(...resources) {
       if (disposed) {
         throw new Error('Worker manager has been disposed');
       }
       lastUsedTime = Date.now();
 
-      if (!client) {
+      if (!worker) {
         worker = monaco.editor.createWebWorker<PromisifiedWorker<T>>({
           createData,
           label,
           moduleId,
         });
-        client = worker.getProxy();
       }
 
-      await worker!.withSyncedResources(resources);
-
-      return client;
+      return worker.withSyncedResources(resources);
     },
 
     updateCreateData(newCreateData) {

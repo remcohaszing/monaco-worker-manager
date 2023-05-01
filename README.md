@@ -11,7 +11,7 @@ A Monaco worker manager handles workers in a type safe manner.
 This project has a peer dependency on `monaco-editor`. It’s recommded to add it explicitly.
 
 ```sh
-npm install monaco-editor monaco-editor-manager
+npm install monaco-editor monaco-worker-manager
 ```
 
 ## Usage

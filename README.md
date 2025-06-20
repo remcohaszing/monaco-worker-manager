@@ -19,74 +19,69 @@ npm install monaco-editor monaco-worker-manager
 Create a module that contains a Monaco web worker, let’s call it `my.worker.ts`.
 
 ```typescript
-import { initialize } from 'monaco-worker-manager/worker';
-import { doValidate } from 'my-language-service';
+import { initialize } from 'monaco-worker-manager/worker'
+import { doValidate } from 'my-language-service'
 
 export interface MyWorker {
-  doValidate: (uri: string) => Violation[];
+  doValidate: (uri: string) => Violation[]
 }
 
 initialize<MyWorker>((ctx, options) => {
-  function getModel(uri: string): worker.IMirrorModel | undefined {
+  function getModel(uri: string): undefined | worker.IMirrorModel {
     for (const model of ctx.getMirrorModels()) {
       if (String(model.uri) === uri) {
-        return model;
+        return model
       }
     }
   }
 
   return {
     doValidate(uri) {
-      const model = getModel(uri);
+      const model = getModel(uri)
 
       if (!model) {
-        return [];
+        return []
       }
 
-      return doValidate(model, options);
-    },
-  };
-});
+      return doValidate(model, options)
+    }
+  }
+})
 ```
 
 Now create a monaco environment and create a worker manager in the main thread:
 
 ```typescript
-import { editor, Uri } from 'monaco-editor';
-import { createWorkerManager } from 'monaco-worker-manager';
+import { editor, Uri } from 'monaco-editor'
+import { createWorkerManager } from 'monaco-worker-manager'
 
-import { MyWorker } from './my.worker';
+import { type MyWorker } from './my.worker'
 
-const myLabel = 'myLabel';
-const myModuleId = 'my.worker';
+const myLabel = 'myLabel'
+const myModuleId = 'my.worker'
 
-window.MonacoEnvironment = {
+globalThis.MonacoEnvironment = {
   getWorker(moduleId, label) {
     switch (label) {
       case 'editorWorkerService':
-        return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker', import.meta.url));
+        return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker', import.meta.url))
       case myLabel:
-        return new Worker(new URL('my.worker', import.meta.url));
+        return new Worker(new URL('my.worker', import.meta.url))
       default:
-        throw new Error(`Unknown label ${label}`);
+        throw new Error(`Unknown label ${label}`)
     }
-  },
-};
+  }
+}
 
 const workerManager = createWorkerManager<MyWorker>({
   label: myLabel,
-  moduleId: myModuleId,
-});
+  moduleId: myModuleId
+})
 
-const model = editor.createModel('Hello Monaco!', 'plaintext', Uri.parse('file:///hello.txt'));
+const model = editor.createModel('Hello Monaco!', 'plaintext', Uri.parse('file:///hello.txt'))
 
-async function main(): Promise<void> {
-  const worker = await workerManager.getWorker(model.uri);
-  const diagnostics = await worker.doValidate(String(model.uri));
-  console.log(diagnostics);
-}
-
-main();
+const worker = await workerManager.getWorker(model.uri)
+const diagnostics = await worker.doValidate(String(model.uri))
 ```
 
 ## API

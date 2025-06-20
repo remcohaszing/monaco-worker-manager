@@ -36,10 +36,8 @@
     "monaco-editor": ">=0.30.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-remcohaszing": "^3.0.0",
-    "prettier": "^2.0.0",
-    "typescript": "^4.0.0"
+    "@remcohaszing/eslint": "^11.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
   }
 }

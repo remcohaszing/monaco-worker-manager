@@ -4,7 +4,7 @@
   "description": "Easily deal with monaco workers",
   "type": "module",
   "scripts": {
-    "prepack": "tsc --noEmit false"
+    "prepack": "tsc --build"
   },
   "repository": {
     "type": "git",
@@ -23,14 +23,12 @@
   },
   "homepage": "https://github.com/remcohaszing/monaco-worker-manager#readme",
   "files": [
-    "index.js",
-    "index.d.ts",
-    "worker.js",
-    "worker.d.ts"
+    "dist",
+    "src"
   ],
   "exports": {
-    ".": "./index.js",
-    "./worker": "./worker.js"
+    ".": "./dist/monaco-worker-manager.js",
+    "./worker": "./dist/worker.js"
   },
   "peerDependencies": {
     "monaco-editor": ">=0.30.0"

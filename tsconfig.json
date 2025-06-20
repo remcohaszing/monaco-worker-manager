@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "lib": ["dom", "esnext", "dom.iterable"],
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmit": true,
+    "declarationMap": true,
+    "module": "nodenext",
+    "outDir": "dist",
+    "rootDir": "src",
+    "sourceMap": true,
     "strict": true,
     "stripInternal": true,
     "target": "esnext"

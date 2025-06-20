@@ -1,1 +1,1 @@
-export { default } from '@remcohaszing/eslint';
+export { default } from '@remcohaszing/eslint'

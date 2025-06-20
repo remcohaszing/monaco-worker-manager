@@ -2,9 +2,18 @@
 
 [![ci workflow](https://github.com/remcohaszing/monaco-worker-manager/actions/workflows/ci.yaml/badge.svg)](https://github.com/remcohaszing/monaco-worker-manager/actions/workflows/ci.yaml)
 [![npm version](https://img.shields.io/npm/v/monaco-worker-manager)](https://www.npmjs.com/package/monaco-worker-manager)
-[![prettier code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io)
+[![npm downloads](https://img.shields.io/npm/dm/monaco-worker-manager)](https://www.npmjs.com/package/monaco-worker-manager)
 
 A Monaco worker manager handles workers in a type safe manner.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [API](#api)
+  - [`monaco-worker-manager#createWorkerManager(options)`](#monaco-worker-managercreateworkermanageroptions)
+  - [`monaco-worker-manager/worker#initialize(fn)`](#monaco-worker-managerworkerinitializefn)
+- [License](#license)
 
 ## Installation
 

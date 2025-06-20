@@ -6,10 +6,7 @@
   "scripts": {
     "prepack": "tsc --build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/remcohaszing/monaco-worker-manager.git"
-  },
+  "repository": "remcohaszing/monaco-worker-manager",
   "keywords": [
     "monaco",
     "monaco-editor",
@@ -18,10 +15,9 @@
   ],
   "author": "Remco Haszing <remcohaszing@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/remcohaszing/monaco-worker-manager/issues"
-  },
+  "bugs": "https://github.com/remcohaszing/monaco-worker-manager/issues",
   "homepage": "https://github.com/remcohaszing/monaco-worker-manager#readme",
+  "funding": "https://github.com/sponsors/remcohaszing",
   "files": [
     "dist",
     "src"

@@ -61,10 +61,10 @@ initialize<MyWorker>((ctx, options) => {
 Now create a monaco environment and create a worker manager in the main thread:
 
 ```typescript
+import type { MyWorker } from './my.worker'
+
 import { editor, Uri } from 'monaco-editor'
 import { createWorkerManager } from 'monaco-worker-manager'
-
-import { type MyWorker } from './my.worker'
 
 const myLabel = 'myLabel'
 const myModuleId = 'my.worker'

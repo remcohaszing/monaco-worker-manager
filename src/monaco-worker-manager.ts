@@ -1,4 +1,4 @@
-import { type editor, type IDisposable, type Uri } from 'monaco-editor'
+import type { editor, IDisposable, Uri } from 'monaco-editor'
 
 /**
  * Change each callback of the type param to a promisified version.

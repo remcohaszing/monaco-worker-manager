@@ -30,10 +30,11 @@
     "monaco-editor": ">=0.30.0"
   },
   "devDependencies": {
-    "@remcohaszing/eslint": "^11.0.0",
+    "@remcohaszing/eslint": "^14.0.0",
+    "monaco-editor": "^0.52.0",
     "prettier": "^3.0.0",
-    "remark-cli": "^12.0.1",
-    "remark-preset-remcohaszing": "^3.1.1",
-    "typescript": "^5.0.0"
+    "remark-cli": "^12.0.0",
+    "remark-preset-remcohaszing": "^3.0.0",
+    "typescript": "^6.0.0"
   }
 }

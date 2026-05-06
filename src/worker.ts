@@ -1,4 +1,5 @@
-import { type worker } from 'monaco-editor'
+import type { worker } from 'monaco-editor'
+
 import { initialize as initializeWorker } from 'monaco-editor/esm/vs/editor/editor.worker.js'
 
 /**

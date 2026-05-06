@@ -6,7 +6,6 @@
     "outDir": "dist",
     "rootDir": "src",
     "sourceMap": true,
-    "strict": true,
     "stripInternal": true,
     "target": "esnext"
   }

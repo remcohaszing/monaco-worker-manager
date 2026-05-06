@@ -1,12 +1,9 @@
 {
+  "exclude": ["src"],
+  "references": [{ "path": "./tsconfig.build.json" }],
   "compilerOptions": {
-    "declaration": true,
-    "declarationMap": true,
     "module": "nodenext",
-    "outDir": "dist",
-    "rootDir": "src",
-    "sourceMap": true,
-    "stripInternal": true,
+    "noEmit": true,
     "target": "esnext"
   }
 }

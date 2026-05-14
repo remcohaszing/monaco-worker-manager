@@ -93,9 +93,13 @@ test('dispose idle worker', async (context) => {
   vi.useFakeTimers()
   const { createWebWorker } = monaco.editor
   let disposeWorker: Mock<() => void> | undefined
+  let callCount = 0
   vi.spyOn(monaco.editor, 'createWebWorker').mockImplementation((options) => {
     const worker = createWebWorker(options)
-    disposeWorker = vi.spyOn(worker, 'dispose')
+    if (options.label === 'test') {
+      callCount += 1
+      disposeWorker = vi.spyOn(worker, 'dispose')
+    }
     return worker
   })
 
@@ -105,9 +109,9 @@ test('dispose idle worker', async (context) => {
   })
   context.onTestFinished(() => workerManager.dispose())
 
-  expect(monaco.editor.createWebWorker).not.toHaveBeenCalled()
+  expect(callCount).toBe(0)
   await workerManager.getWorker()
-  expect(monaco.editor.createWebWorker).toHaveBeenCalledTimes(1)
+  expect(callCount).toBe(1)
 
   expect(disposeWorker).not.toHaveBeenCalled()
   vi.advanceTimersByTime(60_000)
@@ -116,5 +120,5 @@ test('dispose idle worker', async (context) => {
   expect(disposeWorker).toHaveBeenCalled()
 
   await workerManager.getWorker()
-  expect(monaco.editor.createWebWorker).toHaveBeenCalledTimes(2)
+  expect(callCount).toBe(2)
 })

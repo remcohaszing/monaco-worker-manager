@@ -4,10 +4,10 @@ import type { CreateData, TestWorker } from './test.worker.js'
 
 import * as monaco from 'monaco-editor'
 import { createWorkerManager } from 'monaco-worker-manager'
+import { d } from 'proxy-disposable'
 import { afterEach, expect, test, vi } from 'vitest'
 
-// eslint-disable-next-line unicorn/prefer-global-this
-window.MonacoEnvironment = {
+globalThis.MonacoEnvironment = {
   getWorker(workerId, label) {
     switch (label) {
       case 'editorWorker':
@@ -24,54 +24,57 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-test('call worker', async (context) => {
-  const workerManager = createWorkerManager<TestWorker>(monaco, {
-    label: 'test',
-    moduleId: 'test/test'
-  })
-  context.onTestFinished(() => workerManager.dispose())
+test('call worker', async () => {
+  using workerManager = d(
+    createWorkerManager<TestWorker>(monaco, {
+      label: 'test',
+      moduleId: 'test/test'
+    })
+  )
 
   const worker = await workerManager.getWorker()
   const greeting = await worker.greet('client')
   expect(greeting).toBe('Hello, client')
 })
 
-test('synchronize resources', async (context) => {
-  const workerManager = createWorkerManager<TestWorker>(monaco, {
-    label: 'test',
-    moduleId: 'test/test'
-  })
-  context.onTestFinished(() => workerManager.dispose())
+test('synchronize resources', async () => {
+  using workerManager = d(
+    createWorkerManager<TestWorker>(monaco, {
+      label: 'test',
+      moduleId: 'test/test'
+    })
+  )
 
   const uri = monaco.Uri.parse('test://synchronized')
-  const model = monaco.editor.createModel('Model content', undefined, uri)
-  context.onTestFinished(() => model.dispose())
+  using model = d(monaco.editor.createModel('Model content', undefined, uri))
 
   const worker = await workerManager.getWorker(uri)
   const greeting = await worker.getValue(String(uri))
   expect(greeting).toBe('Model content')
 })
 
-test('initial create data', async (context) => {
-  const workerManager = createWorkerManager<TestWorker, CreateData>(monaco, {
-    label: 'test',
-    moduleId: 'test/test',
-    createData: { data: 'test' }
-  })
-  context.onTestFinished(() => workerManager.dispose())
+test('initial create data', async () => {
+  using workerManager = d(
+    createWorkerManager<TestWorker, CreateData>(monaco, {
+      label: 'test',
+      moduleId: 'test/test',
+      createData: { data: 'test' }
+    })
+  )
 
   const worker = await workerManager.getWorker()
   const data = await worker.getCreateData()
   expect(data).toStrictEqual({ data: 'test' })
 })
 
-test('update create data', async (context) => {
-  const workerManager = createWorkerManager<TestWorker, CreateData>(monaco, {
-    label: 'test',
-    moduleId: 'test/test',
-    createData: { data: 'old' }
-  })
-  context.onTestFinished(() => workerManager.dispose())
+test('update create data', async () => {
+  using workerManager = d(
+    createWorkerManager<TestWorker, CreateData>(monaco, {
+      label: 'test',
+      moduleId: 'test/test',
+      createData: { data: 'old' }
+    })
+  )
 
   workerManager.updateCreateData({ data: 'new' })
   const worker = await workerManager.getWorker()
@@ -89,7 +92,7 @@ test('get worker after disposed', () => {
   expect(() => workerManager.getWorker()).toThrow(new Error('Worker manager has been disposed'))
 })
 
-test('dispose idle worker', async (context) => {
+test('dispose idle worker', async () => {
   vi.useFakeTimers()
   const { createWebWorker } = monaco.editor
   let disposeWorker: Mock<() => void> | undefined
@@ -103,11 +106,12 @@ test('dispose idle worker', async (context) => {
     return worker
   })
 
-  const workerManager = createWorkerManager<TestWorker>(monaco, {
-    label: 'test',
-    moduleId: 'test/test'
-  })
-  context.onTestFinished(() => workerManager.dispose())
+  using workerManager = d(
+    createWorkerManager<TestWorker>(monaco, {
+      label: 'test',
+      moduleId: 'test/test'
+    })
+  )
 
   expect(callCount).toBe(0)
   await workerManager.getWorker()

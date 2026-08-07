@@ -1,6 +1,6 @@
 import type { worker } from 'monaco-editor'
 
-import { initialize as initializeWorker } from 'monaco-editor/esm/vs/editor/editor.worker.js'
+import { initialize as initializeWorker } from 'monaco-editor/editor/editor.worker.js'
 
 /**
  * Change each callback of the type param to a promisified version.

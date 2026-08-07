@@ -29,13 +29,13 @@
     "./worker": "./dist/worker.js"
   },
   "peerDependencies": {
-    "monaco-editor": ">=0.30.0"
+    "monaco-editor": ">=0.56.0"
   },
   "devDependencies": {
     "@remcohaszing/eslint": "^14.0.0",
     "@vitest/browser-playwright": "^4.0.0",
     "@vitest/coverage-v8": "^4.0.0",
-    "monaco-editor": "^0.54.0",
+    "monaco-editor": "^0.56.0",
     "playwright": "^1.0.0",
     "prettier": "^3.0.0",
     "proxy-disposable": "^1.0.0",

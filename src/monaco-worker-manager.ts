@@ -86,7 +86,7 @@ export function createWorkerManager<T, C = unknown>(
   monaco: Pick<typeof import('monaco-editor'), 'editor'>,
   options: WorkerManagerOptions<C>
 ): WorkerManager<T, C> {
-  let { createData, interval = 30_000, label, moduleId, stopWhenIdleFor = 120_000 } = options
+  let { createData, interval = 30_000, label, stopWhenIdleFor = 120_000 } = options
   let worker: editor.MonacoWebWorker<PromisifiedWorker<T>> | undefined
   let lastUsedTime = 0
   let disposed = false
@@ -122,11 +122,23 @@ export function createWorkerManager<T, C = unknown>(
       }
       lastUsedTime = Date.now()
 
-      worker ||= monaco.editor.createWebWorker<PromisifiedWorker<T>>({
-        createData,
-        label,
-        moduleId
-      })
+      if (!worker) {
+        // Monaco passes this same placeholder id for its own workers. Consumers dispatch on label.
+        const createdWorker = globalThis.MonacoEnvironment?.getWorker?.('workerMain.js', label)
+
+        if (!createdWorker) {
+          throw new Error('You must define a function MonacoEnvironment.getWorker')
+        }
+
+        worker = monaco.editor.createWebWorker<PromisifiedWorker<T>>({
+          worker: Promise.resolve(createdWorker).then((created) => {
+            // The worker discards the first message and treats the second as its create data.
+            created.postMessage('ignore', [])
+            created.postMessage(createData, [])
+            return created
+          })
+        })
+      }
 
       return worker.withSyncedResources(resources)
     },

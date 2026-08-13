@@ -73,7 +73,7 @@ globalThis.MonacoEnvironment = {
   getWorker(moduleId, label) {
     switch (label) {
       case 'editorWorkerService':
-        return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker', import.meta.url))
+        return new Worker(new URL('monaco-editor/editor/editor.worker.js', import.meta.url))
       case myLabel:
         return new Worker(new URL('my.worker', import.meta.url))
       default:

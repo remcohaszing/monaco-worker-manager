@@ -11,7 +11,7 @@ globalThis.MonacoEnvironment = {
   getWorker(workerId, label) {
     switch (label) {
       case 'editorWorker':
-        return new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url))
+        return new Worker(new URL('monaco-editor/editor/editor.worker.js', import.meta.url))
       case 'test':
         return new Worker(new URL('test.worker.ts', import.meta.url), { type: 'module' })
       default:
@@ -82,6 +82,26 @@ test('update create data', async () => {
   expect(data).toStrictEqual({ data: 'new' })
 })
 
+test('missing MonacoEnvironment.getWorker', () => {
+  const { MonacoEnvironment } = globalThis
+  globalThis.MonacoEnvironment = {}
+
+  try {
+    using workerManager = d(
+      createWorkerManager<TestWorker>(monaco, {
+        label: 'test',
+        moduleId: 'test/test'
+      })
+    )
+
+    expect(() => workerManager.getWorker()).toThrow(
+      new Error('You must define a function MonacoEnvironment.getWorker')
+    )
+  } finally {
+    globalThis.MonacoEnvironment = MonacoEnvironment
+  }
+})
+
 test('get worker after disposed', () => {
   const workerManager = createWorkerManager<TestWorker>(monaco, {
     label: 'test',
@@ -99,10 +119,8 @@ test('dispose idle worker', async () => {
   let callCount = 0
   vi.spyOn(monaco.editor, 'createWebWorker').mockImplementation((options) => {
     const worker = createWebWorker(options)
-    if (options.label === 'test') {
-      callCount += 1
-      disposeWorker = vi.spyOn(worker, 'dispose')
-    }
+    callCount += 1
+    disposeWorker = vi.spyOn(worker, 'dispose')
     return worker
   })
 
